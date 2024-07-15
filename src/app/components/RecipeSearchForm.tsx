@@ -1,25 +1,15 @@
 import { useState, FormEvent, ChangeEvent } from "react";
-import useSWR from "swr";
 import { Recipe } from "../types/types";
 import RecipeCard from "./RecipeCard";
 
-async function fetcher(url: string): Promise<Recipe | null> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return response.json() as unknown as Recipe;
-}
-
 export default function RecipeSearchForm() {
-  console.log(process.env.RECIPE_API, "RECIPE API");
-  console.log(process.env.INGREDIENT_API, "ingredient API");
+  console.log(process.env.NEXT_PUBLIC_RECIPE_API);
+  console.log(process.env.NEXT_PUBLIC_INGREDIENT_API);
+
   const [currentInput, setCurrentInput] = useState("");
-  const {
-    data: recipe,
-    error,
-    isLoading,
-  } = useSWR(`recipe/${currentInput}`, fetcher);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
